@@ -8,3 +8,39 @@ services:
     container_name: nginx
     ports:
       - "443:443"
+    networks:
+        - shared_network
+  mariadb:
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    build:
+      context: ./mariadb
+      dockerfile: Dockerfile
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    volumes:
+      -  /home/lazmoud/data/db:/home/lazmoud/data/db
+    networks:
+        - shared_network
+  wordpress:
+    environment:
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+    build:
+      context: ./wordpress
+      dockerfile: Dockerfile
+    container_name: wordpress
+    ports:
+      - "9000:9000"
+    volumes:
+      -  /home/lazmoud/data/html:/home/lazmoud/data/html:ro
+    networks:
+        - shared_network
+networks:
+    - shared_network

@@ -16,10 +16,5 @@ apt-get install -y \
     curl \
     ca-certificates \
 
+sed -i -e 's|listen = .*|listen = 9000|' /etc/php/*/fpm/pool.d/www.conf # Configure fpm
 rm -rf /var/lib/apt/lists/*
-sed -i -e 's|listen = .*|listen = 9000|' /etc/php/*/fpm/pool.d/www.conf
-mkdir -p /var/www/html
-cd /var/www/html
-curl -o wordpress.tar.gz 'https://wordpress.org/latest.tar.gz'
-tar -xzf wordpress.tar.gz --strip-components=1
-rm wordpress.tar.gz
