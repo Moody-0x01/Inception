@@ -1,5 +1,6 @@
 FROM debian:12
 
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y mariadb-server && \
     rm -rf /var/lib/apt/lists/*

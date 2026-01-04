@@ -1,8 +1,24 @@
 FROM debian:12
 
-COPY fpm_setup.sh /
-RUN chmod +x /fpm_setup.sh && /fpm_setup.sh
-RUN rm -rf /fpm_setup.sh
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update
+RUN apt-get install -y \
+    php \
+    php-fpm \
+    php-mysql \
+    php-gd \
+    php-curl \
+    php-zip \
+    php-xml \
+    php-mbstring \
+    php-intl \
+    unzip \
+    curl \
+    ca-certificates
+RUN rm -rf /var/lib/apt/lists/*
+RUN sed -i -e 's|listen = .*|listen = 9000|' /etc/php/*/fpm/pool.d/www.conf
+RUN curl 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar' -o /bin/wp && chmod +x /bin/wp
+COPY --chmod=+x ./install.sh /
 
 EXPOSE 9000
-CMD ["php-fpm8.2", "-F"]
+CMD ["/install.sh"]
