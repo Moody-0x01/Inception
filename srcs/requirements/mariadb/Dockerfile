@@ -13,4 +13,5 @@ EXPOSE 3306
 COPY mr_setup.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["mysqld"]
+USER mysql
+CMD ["mysqld", "--bind-address=0.0.0.0"]
