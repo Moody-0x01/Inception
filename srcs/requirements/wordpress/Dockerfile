@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     php \
     php-fpm \
     php-mysql \
+	default-mysql-client \
     php-gd \
     php-curl \
     php-zip \

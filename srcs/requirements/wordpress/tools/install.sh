@@ -2,9 +2,14 @@
 set -e
 cd /var/www/html
 
-sleep 10
+
 WORDPRESS_DB_PASSWORD=$(cat /run/secrets/db_password)
 WP_PASSWORD=$(cat /run/secrets/wp_admin_password)
+
+until mysqladmin ping -h mariadb -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --silent; do
+  echo "Waiting for MariaDB..."
+  sleep 2
+done
 
 if [ ! -f wp-includes/version.php ]; then
     echo "Downloading WordPress..."
