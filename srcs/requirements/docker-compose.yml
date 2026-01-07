@@ -13,11 +13,12 @@ services:
     networks:
         - shared_network
   mariadb:
+    secrets:
+      - db_root_password
+      - db_password
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     build:
       context: ./mariadb
       dockerfile: Dockerfile
@@ -27,16 +28,17 @@ services:
     networks:
         - shared_network
   wordpress:
+    secrets:
+      - wp_admin_password
+      - db_password
     environment:
       WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
       WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
       WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
       SITE_TITLE: ${SITE_TITLE}
       URL: ${URL}
       EMAIL: ${EMAIL}
       WP_USER: ${WP_USER}
-      WP_PASSWORD: ${WP_PASSWORD}
     build:
       context: ./wordpress
       dockerfile: Dockerfile
@@ -45,6 +47,13 @@ services:
       -  /home/lazmoud/data/html:/var/www/html
     networks:
       - shared_network
+secrets:
+  db_root_password:
+    file: ../../secrets/db_root_password.txt
+  db_password:
+    file: ../../secrets/db_password.txt
+  wp_admin_password:
+    file: ../../secrets/wp_admin_password.txt
 networks:
   shared_network:
     driver: bridge

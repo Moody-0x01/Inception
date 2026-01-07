@@ -1,7 +1,11 @@
 #!/bin/bash
 set -e
 cd /var/www/html
+
 sleep 10
+WORDPRESS_DB_PASSWORD=$(cat /run/secrets/db_password)
+WP_PASSWORD=$(cat /run/secrets/wp_admin_password)
+
 if [ ! -f wp-includes/version.php ]; then
     echo "Downloading WordPress..."
     wp core download --allow-root

@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+MYSQL_ROOT_PASSWORD=$(cat /run/secrets/db_root_password)
+MYSQL_PASSWORD=$(cat /run/secrets/db_password)
+
 if [ ! -d "/var/lib/mysql/mysql" ]; then
     echo "First run - initializing database..."
     
