@@ -35,6 +35,7 @@
     - Logs:
         - using make: `sudo make logs`
         - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose logs -f`
+        - Additional make commands for each service: nx_logs[nginx], wp_logs[wordpress], md_logs[mariadb]
     - Status:
         - using make: `sudo make status`
         - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose ps`
@@ -44,6 +45,9 @@
     - Shutdown and Clean:
         - using make: `sudo make clean`
         - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose down -v`
+    - Clean up volumes:
+        - using make: `sudo make vpurge`
+        - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose down --volumes --remove-orphans`
 # Data
     - mariadb's data live in a volume that exists inside the host`s file system at `/home/lazmoud/data/db` and is mounted to `/var/lib/mysql`.
     - wordpress's data and configuration live in a volume that exists inside the host`s file system at `/home/lazmoud/data/html` and is mounted to `/var/www/html`

@@ -1,18 +1,22 @@
-A README.md file must be provided at the root of your Git repository. Its purpose is
-to allow anyone unfamiliar with the project (peers, staff, recruiters, etc.) to quickly
-understand what the project is about, how to run it, and where to find more information
-on the topic.
-The README.md must include at least:
+# _This project has been created as part of the 42 curriculum by lazmoud_
 
-• The very first line must be italicized and read: This project has been created as part
-of the 42 curriculum by <login1>[, <login2>[, <login3>[...]]].
+## Description
 
-• A “Description” section that clearly presents the project, including its goal and a
-brief overview.
+### overview
+- This project is mainly about setting up an infrastructure that consists of a web server, a database and a website using a containerization tool called docker and specifically docker compose.
+### Goal
+- This project aims to broaden your knowledge of system administration by using Docker. You will virtualize several Docker images, creating them in your new personal virtual
+machine
+Virtual Machines vs Docker
+Secrets vs Environment Variables
+Docker Network vs Host Network
+Docker Volumes vs Bind Mounts
 
+## Instructions
 • An “Instructions” section containing any relevant information about compilation,
 installation, and/or execution.
 
+## Resources
 • A “Resources” section listing classic references related to the topic (documen-
 tation, articles, tutorials, etc.), as well as a description of how AI was used —
 specifying for which tasks and which parts of the project.
@@ -25,7 +29,3 @@ Any required additions will be explicitly listed below.
 included in the project. It must indicate the main design choices, as well as a
 comparison between:
 
-◦ Virtual Machines vs Docker
-◦ Secrets vs Environment Variables
-◦ Docker Network vs Host Network
-◦ Docker Volumes vs Bind Mounts

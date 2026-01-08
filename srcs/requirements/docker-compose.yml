@@ -1,17 +1,6 @@
 version: '3.8'
 
 services:
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    container_name: nginx
-    volumes:
-      -  /home/lazmoud/data/html:/var/www/html
-    ports:
-      - "443:443"
-    networks:
-        - shared_network
   mariadb:
     secrets:
       - db_root_password
@@ -47,6 +36,17 @@ services:
       -  /home/lazmoud/data/html:/var/www/html
     networks:
       - shared_network
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    volumes:
+      -  /home/lazmoud/data/html:/var/www/html
+    ports:
+      - "443:443"
+    networks:
+        - shared_network
 secrets:
   db_root_password:
     file: ../../secrets/db_root_password.txt
