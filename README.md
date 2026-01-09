@@ -2,30 +2,50 @@
 
 ## Description
 
-### overview
-- This project is mainly about setting up an infrastructure that consists of a web server, a database and a website using a containerization tool called docker and specifically docker compose.
-### Goal
-- This project aims to broaden your knowledge of system administration by using Docker. You will virtualize several Docker images, creating them in your new personal virtual
-machine
-Virtual Machines vs Docker
-Secrets vs Environment Variables
-Docker Network vs Host Network
-Docker Volumes vs Bind Mounts
+This project is clearly about setting up 3 services and linking them through a shared network and data volumes using docker compose.
+each service is ran separately in its own docker instance and then docker compose makes it accessible to be connected to by the service that needs it.
+the services we got are: wordpress, mariadb, nginx.
+nginx is ckearly on the top of the stack and is the one which accessible by the users to send requests to through port 443/https. then it communicates internally
+with wordpress by forwarding the request to it, then wordpress has a persistent connection with mariadb in order to authenticate, manage data and so on.
+the goal of this project is to become familiar with containerization, docker, and docker compose.
 
 ## Instructions
-• An “Instructions” section containing any relevant information about compilation,
-installation, and/or execution.
+
+### before-hand Setup
+I mean, Install docker then make it active through systemctl, becuase nothing will work without those.
+you can start it using these commands:
+    `sh
+        $> sudo systemctl start docker.service
+        $> sudo systemctl start docker.socket
+    `
+before typing any command you start by creating a .env file at: `./srcs/requirements/.env` in this format:
+    `
+        MYSQL_DATABASE=database
+        WORDPRESS_DB_NAME=${MYSQL_DATABASE} # same as MYSQL_DATABASE
+        MYSQL_USER=db_user
+        WORDPRESS_DB_USER=${MYSQL_USER} # same as MYSQL_USER
+        WORDPRESS_DB_HOST=dbhost:dbport
+        WP_USER=wp_user
+        SITE_TITLE="EPIC WEBSITE!"
+        URL="Host"
+        EMAIL="example@example.co"
+    `
+then create these files:
+`./secrets/wp_admin_password.txt`:  wordpress administrator password.
+`./secrets/db_password.txt`:        mariadb regular user password.
+`./secrets/db_root_password.txt`:   mariadb root user password. should be very secure
+
+### if all secrets/.env files were created
+to spawn up the containers you can just type `sudo make` in the root directory
+to build the containers you can just type `sudo make build` in the root directory
+to start the containers you can just type `sudo make up` in the root directory
+to stop the containers you can just type `sudo make down` in the root directory
+to check the status of the containers you can just type `sudo make status` in the root directory
 
 ## Resources
-• A “Resources” section listing classic references related to the topic (documen-
-tation, articles, tutorials, etc.), as well as a description of how AI was used —
-specifying for which tasks and which parts of the project.
-
-➠ Additional sections may be required depending on the project (e.g., usage
-examples, feature list, technical choices, etc.).
-Any required additions will be explicitly listed below.
-
-• A Project description section must also explain the use of Docker and the sources
-included in the project. It must indicate the main design choices, as well as a
-comparison between:
-
+- [The official NGINX docs](https://nginx.org/en/docs/)
+- [The official Docker manuals](https://docs.docker.com/manuals/)
+- [Wordpress advanced administration](https://developer.wordpress.org/advanced-administration/)
+- [The official Mariadb docs](https://mariadb.com/docs)
+- [Intro into docker](https://youtu.be/Ud7Npgi6x8E?si=booTArqRSeDZ5Cne)
+- I also meanly used chatgpt to understand how can I link up nginx and wordpress correctly by configuring nginx properly.
