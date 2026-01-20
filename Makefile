@@ -1,10 +1,14 @@
 DOCKER_DIR=./srcs/requirements/
-COMPOSE_=cd $(DOCKER_DIR) && docker compose
+VOLUMES=/home/lazmoud/data/db/ /home/lazmoud/data/html/
+RM=@rm -rf
+COMPOSE_=@cd $(DOCKER_DIR) && docker compose
 
 all:
 	$(COMPOSE_) up -d --build
 build:
 	$(COMPOSE_) build
+reup:
+	$(COMPOSE_) up --build --force-recreate
 up:
 	$(COMPOSE_) up -d
 down:
@@ -22,7 +26,13 @@ wp_logs:
 md_logs:
 	$(COMPOSE_) logs mariadb
 vpurge:
-	$(COMPOSE_) down --volumes --remove-orphans
-re: down all
+	$(RM) $(VOLUMES)
+	@mkdir -p $(VOLUMES)
+	$(COMPOSE_) down --volumes --remove-orphans --rmi all
+	@cd $(DOCKER_DIR) && docker system prune -af --volumes
+fclean: clean
+	$(RM) $(VOLUMES)
+	@mkdir $(VOLUMES)
+re: vpurge reup
 
-.PHONY: all build up down status logs clean re nx_logs md_logs wp_logs purge
+.PHONY: all build up down status logs clean re nx_logs md_logs wp_logs vpurge fclean reup

@@ -4,24 +4,31 @@ services:
       - db_root_password
       - db_password
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
+      MARIA_DATABASE_NAME: ${MARIA_DATABASE_NAME}
+      MARIA_DB_USER: ${MARIA_DB_USER}
     build:
       context: ./mariadb
       dockerfile: Dockerfile
     container_name: mariadb
     volumes:
-      -  /home/lazmoud/data/db:/var/lib/mysql
+      - db_data:/var/lib/mysql
     networks:
-        - shared_network
+      - shared_network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin --protocol=socket ping --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
   wordpress:
     secrets:
       - wp_admin_password
       - db_password
     environment:
-      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+      MARIA_DB_HOST: ${MARIA_DB_HOST}
+      MARIA_DB_USER: ${MARIA_DB_USER}
+      MARIA_DATABASE_NAME: ${MARIA_DATABASE_NAME}
       SITE_TITLE: ${SITE_TITLE}
       URL: ${URL}
       EMAIL: ${EMAIL}
@@ -31,20 +38,34 @@ services:
       dockerfile: Dockerfile
     container_name: wordpress
     volumes:
-      -  /home/lazmoud/data/html:/var/www/html
+      -  html_data:/var/www/html
     networks:
       - shared_network
+    restart: always
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    # healthcheck:
+    #   test: ["CMD", "curl -f http://localhost:9000"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 20s
   nginx:
     build:
       context: ./nginx
       dockerfile: Dockerfile
     container_name: nginx
     volumes:
-      -  /home/lazmoud/data/html:/var/www/html
+      -  html_data:/var/www/html
     ports:
       - "443:443"
     networks:
-        - shared_network
+      - shared_network
+    restart: always
+    # depends_on:
+    #   wordpress:
+    #     condition: service_healthy
 secrets:
   db_root_password:
     file: ../../secrets/db_root_password.txt
@@ -52,6 +73,21 @@ secrets:
     file: ../../secrets/db_password.txt
   wp_admin_password:
     file: ../../secrets/wp_admin_password.txt
+
 networks:
   shared_network:
     driver: bridge
+
+volumes:
+  html_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/lazmoud/data/html
+      o: bind
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/lazmoud/data/db
+      o: bind
