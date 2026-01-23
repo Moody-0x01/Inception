@@ -14,12 +14,18 @@ RUN apt-get update && apt-get install -y \
     php-intl \
     unzip \
     curl \
-    ca-certificates
-RUN rm -rf /var/lib/apt/lists/*
-RUN sed -i -e 's|listen = .*|listen = 9000|' /etc/php/*/fpm/pool.d/www.conf
-RUN curl 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar' -o /bin/wp && chmod +x /bin/wp
-COPY ./tools/install.sh /
-RUN chmod +x /install.sh
+    ca-certificates && \
+	rm -rf /var/lib/apt/lists/*
 
+RUN sed -i -e 's|listen = .*|listen = 9000|' /etc/php/*/fpm/pool.d/www.conf
+RUN curl 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar' -o /usr/local/bin/wp
 EXPOSE 9000
-CMD ["/install.sh"]
+
+COPY ./tools /usr/local/bin
+
+RUN set -e \
+ && chmod +x /usr/local/bin/* \
+ && command -v bash >/dev/null
+
+ENTRYPOINT ["run.sh"]
+CMD ["php-fpm8.2", "-F"]

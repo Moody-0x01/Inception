@@ -1,7 +1,7 @@
 DOCKER_DIR=./srcs/requirements/
 VOLUMES=/home/lazmoud/data/db/ /home/lazmoud/data/html/
 RM=@rm -rf
-COMPOSE_=@cd $(DOCKER_DIR) && docker compose
+COMPOSE_=@cd $(DOCKER_DIR) && DOCKER_BUILDKIT=1  docker compose
 
 all:
 	$(COMPOSE_) up -d --build
