@@ -3,11 +3,9 @@
     - configurations:
         - nginx config that insures that the server can connect to `php-fpm` at ./srcs/requirements/nginx/conf/nginx.conf
         - `.env` file that has these variables setup:
-            - `MYSQL_DATABASE`:  Name of the db that will be created by mariadb.
-            - `WORDPRESS_DB_NAME`: the name of the db that wordpress will connect to thro mariadb, typically it is the same as `MYSQL_DATABASE`
-            - `MYSQL_USER`: The user that will be created by mariadb when it starts.
-            - `WORDPRESS_DB_USER`: The user that will be used by wordpress to connect to mariadb, typically it is the same as `MYSQL_USER`
-            - `WORDPRESS_DB_HOST`: the host of the db inside the container network, it has this format: container_name:PORT, example: mariadb:3306
+            - `MARIA_DATABASE_NAME`:  Name of the db that will be created by mariadb.
+            - `MARIA_DB_USER`: The user that will be created by mariadb when it starts.
+            - `MARIA_DB_HOST`: the host of the db inside the container network, it has this format: container_name:PORT, example: mariadb:3306 or just mariadb since mariadb defaults to 3306.
             - `WP_USER`: wordpress user that will be created by wordpress.
             - `SITE_TITLE`: The title of the site that will be created through wordpress.
             - `URL`: the url of ur website... typically the host that will be assigned either via dns or just internally through `/etc/hosts`
@@ -20,34 +18,37 @@
 # Launch
     - Build & Launch:
         - using make: `sudo make`
-        - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose up -d --build`
+        - using docker compose: `cd ./srcs &&  sudo docker compose up -d --build`
     - Build:
         - using make: `sudo make build`
-        - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose build`
+        - using docker compose: `cd ./srcs &&  sudo docker compose build`
     - Launch:
         - using make: `sudo make up`
-        - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose up -d`
+        - using docker compose: `cd ./srcs &&  sudo docker compose up -d`
 
 # Management
     - Restart:
         - using make: `sudo make re`
-        - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose down && sudo docker compose up -d --build`
+        - using docker compose: `cd ./srcs &&  sudo docker compose down && sudo docker compose up -d --build`
     - Logs:
         - using make: `sudo make logs`
-        - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose logs -f`
+        - using docker compose: `cd ./srcs &&  sudo docker compose logs -f`
         - Additional make commands for each service: nx_logs[nginx], wp_logs[wordpress], md_logs[mariadb]
     - Status:
         - using make: `sudo make status`
-        - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose ps`
+        - using docker compose: `cd ./srcs &&  sudo docker compose ps`
     - Shutdown:
         - using make: `sudo make down`
-        - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose down`
+        - using docker compose: `cd ./srcs &&  sudo docker compose down`
     - Shutdown and Clean:
         - using make: `sudo make clean`
-        - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose down -v`
+        - using docker compose: `cd ./srcs &&  sudo docker compose down -v`
     - Clean up volumes:
         - using make: `sudo make vpurge`
-        - using docker compose: `cd ./srcs/requirements/ &&  sudo docker compose down --volumes --remove-orphans`
+        - using docker compose: `cd ./srcs &&  sudo docker compose down --volumes --remove-orphans`
+    - Rebuild:
+        - using make: `sudo make rebuild`
+        - using docker compose: `cd ./srcs docker compose up --build --force-recreate`
 # Data
     - mariadb's data live in a volume that exists inside the host`s file system at `/home/lazmoud/data/db` and is mounted to `/var/lib/mysql`.
     - wordpress's data and configuration live in a volume that exists inside the host`s file system at `/home/lazmoud/data/html` and is mounted to `/var/www/html`
